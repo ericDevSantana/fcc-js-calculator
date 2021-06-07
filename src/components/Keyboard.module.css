@@ -1,0 +1,40 @@
+.item-a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: aquamarine;
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.item-b {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-c {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.item-d {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-column-start: 4;
+  grid-column-end: 5;
+  grid-row-start: 4;
+  grid-row-end: 6;
+}
+
+.keyboard {
+  height: 20rem;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+  padding: 1px;
+}

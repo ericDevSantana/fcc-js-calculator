@@ -1,0 +1,7 @@
+.calculator {
+  width: 30%;
+  margin: auto;
+  display: block;
+  margin-top: 5rem;
+  border: 1px solid tomato;
+}
