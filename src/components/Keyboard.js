@@ -12,8 +12,8 @@ const Keyboard = (props) => {
   });
 
   useEffect(() => {
-    liftExpression(expressionObject);
-  }, [liftExpression, expressionObject]);
+    liftExpression(expressionObject.firstExpression);
+  }, [expressionObject.firstExpression, liftExpression]);
 
   const buttonHandler = (event) => {
     if (expressionObject.operator === "") {
