@@ -40,8 +40,6 @@
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: auto;
-  margin: 10px 0;
-  border: 1px solid black;
   font-size: 1.5rem;
 }
 
