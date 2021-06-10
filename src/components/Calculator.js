@@ -8,7 +8,7 @@ const Calculator = (props) => {
   const [firstExpression, setFirstExpression] = useState("0");
   const [operator, setOperator] = useState("");
   const [secondExpression, setSecondExpression] = useState("");
-  const [result, setResult] = useState("");
+  const [pos, setPos] = useState(0);
 
   const buttonHandler = (event) => {
     //Check if the event is a number
@@ -51,12 +51,44 @@ const Calculator = (props) => {
       event.target.value.includes("*") ||
       event.target.value.includes("-")
     ) {
-      if (operator !== "" && secondExpression !== "") {
+      if (
+        operator !== "" &&
+        secondExpression !== "" &&
+        secondExpression !== "-"
+      ) {
+        console.log(firstExpression + operator + "(" + secondExpression + ")");
         //resolve already
         setFirstExpression(
-          String(eval(firstExpression + operator + secondExpression))
+          String(
+            eval(firstExpression + operator + "(" + secondExpression + ")")
+          )
         );
         setSecondExpression("");
+        setOperator(event.target.value);
+      } else if (
+        firstExpression === "" &&
+        operator === "" &&
+        secondExpression === "" &&
+        event.target.value === "-"
+      ) {
+        setPos((prevValue) => {
+          return prevValue + 1;
+        });
+      } else if (
+        firstExpression !== "" &&
+        operator !== "" &&
+        secondExpression === "" &&
+        event.target.value === "-"
+      ) {
+        setPos((prevValue) => {
+          return prevValue + 1;
+        });
+      } else if (operator !== "" && secondExpression === "") {
+        if (pos % 2 !== 0 && event.target.value !== "-") {
+          setPos((prevValue) => {
+            return prevValue - 1;
+          });
+        }
         setOperator(event.target.value);
       } else {
         setOperator(event.target.value);
@@ -67,7 +99,7 @@ const Calculator = (props) => {
       setFirstExpression("0");
       setSecondExpression("");
       setOperator("");
-      setResult("");
+      setPos(0);
     }
     //Check if the event is Equals
     else if (event.target.value === "=") {
@@ -76,12 +108,20 @@ const Calculator = (props) => {
         operator !== "" &&
         secondExpression !== ""
       ) {
-        // setResult(eval(firstExpression + operator + secondExpression));
-        setFirstExpression(
-          String(eval(firstExpression + operator + secondExpression))
-        );
+        if (pos % 2 === 0) {
+          setFirstExpression(
+            String(
+              eval(firstExpression + operator + "(" + secondExpression + ")")
+            )
+          );
+        } else {
+          setFirstExpression(
+            String(
+              eval(firstExpression + operator + "(-" + secondExpression + ")")
+            )
+          );
+        }
       } else if (firstExpression !== "" && secondExpression === "") {
-        // setResult(eval(firstExpression));
         setFirstExpression(String(eval(firstExpression)));
       }
       setSecondExpression("");
