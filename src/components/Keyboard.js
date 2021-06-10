@@ -1,66 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "./Keyboard.module.css";
 
 const Keyboard = (props) => {
-  const { liftExpression } = props;
-
-  const [expressionObject, setExpressionObject] = useState({
-    firstExpression: "0",
-    operator: "",
-    lastExpression: "",
-    result: "",
-  });
-
-  useEffect(() => {
-    liftExpression(expressionObject.firstExpression);
-  }, [expressionObject.firstExpression, liftExpression]);
-
-  const buttonHandler = (event) => {
-    if (expressionObject.operator === "") {
-      switch (event.target.id) {
-        case "zero":
-          if (expressionObject.firstExpression !== "0") {
-            setExpressionObject((prevValue) => {
-              return {
-                ...prevValue,
-                firstExpression: prevValue.firstExpression + "0",
-              };
-            });
-          }
-          break;
-        case "one":
-          setExpressionObject((prevValue) => {
-            return {
-              ...prevValue,
-              firstExpression: prevValue.firstExpression + "1",
-            };
-          });
-          break;
-        case "two":
-          setExpressionObject((prevValue) => {
-            return {
-              ...prevValue,
-              firstExpression: prevValue.firstExpression + "2",
-            };
-          });
-          break;
-      }
-    }
-
-    switch (event.target.id) {
-      case "clear":
-        setExpressionObject({
-          firstExpression: "0",
-          operator: "",
-          lastExpression: "",
-          result: "",
-        });
-        break;
-      default:
-        break;
-    }
-  };
-
+  const buttonHandler = (event) => {};
   return (
     <div className={styles.keyboard}>
       <div className={styles["item-a"]} id="clear" onClick={buttonHandler}>

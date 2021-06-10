@@ -1,251 +1,234 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Display from "./Display";
 import styles from "./Calculator.module.css";
 
+const isNumber = new RegExp("^[0-9]$");
+
 const Calculator = (props) => {
-  const [display, setDisplay] = useState("0");
   const [firstExpression, setFirstExpression] = useState("0");
   const [operator, setOperator] = useState("");
   const [secondExpression, setSecondExpression] = useState("");
+  const [result, setResult] = useState("");
 
-  const expressionHandler = (event) => {};
-
-  useEffect((expressionHandler) => {
-    expressionHandler = (event) => {
-      if (firstExpression === "0") {
-        setFirstExpression("");
+  const buttonHandler = (event) => {
+    //Check if the event is a number
+    if (isNumber.test(event.target.value)) {
+      if (operator === "") {
+        if (firstExpression === "0") {
+          setFirstExpression("");
+        }
+        setFirstExpression((prevValue) => {
+          return prevValue + event.target.value;
+        });
+      } else {
+        setSecondExpression((prevValue) => {
+          return prevValue + event.target.value;
+        });
       }
-      switch (event.target.id) {
-        case "clear":
-          setFirstExpression("0");
-          setOperator("");
-          setSecondExpression("");
-          setDisplay("0");
-          break;
-        case "equals":
-          break;
-        case "add":
-          setOperator("+");
-          break;
-        case "subtract":
-          setOperator("-");
-          break;
-        case "multiply":
-          setOperator("*");
-          break;
-        case "divide":
-          setOperator("/");
-          break;
-        case "decimal":
-          break;
-        case "zero":
-          if (operator === "") {
-            setFirstExpression((prevValue) => {
-              return prevValue + "0";
-            });
-          } else {
-            setSecondExpression((prevValue) => {
-              return prevValue + "0";
-            });
-          }
-          break;
-        case "one":
-          if (operator === "") {
-            setFirstExpression((prevValue) => {
-              return prevValue + "1";
-            });
-          } else {
-            setSecondExpression((prevValue) => {
-              return prevValue + "1";
-            });
-          }
-          break;
-        case "two":
-          if (operator === "") {
-            setFirstExpression((prevValue) => {
-              return prevValue + "2";
-            });
-          } else {
-            setSecondExpression((prevValue) => {
-              return prevValue + "2";
-            });
-          }
-          break;
-        case "three":
-          if (operator === "") {
-            setFirstExpression((prevValue) => {
-              return prevValue + "3";
-            });
-          } else {
-            setSecondExpression((prevValue) => {
-              return prevValue + "3";
-            });
-          }
-          break;
-        case "four":
-          if (operator === "") {
-            setFirstExpression((prevValue) => {
-              return prevValue + "4";
-            });
-          } else {
-            setSecondExpression((prevValue) => {
-              return prevValue + "4";
-            });
-          }
-          break;
-        case "five":
-          if (operator === "") {
-            setFirstExpression((prevValue) => {
-              return prevValue + "5";
-            });
-          } else {
-            setSecondExpression((prevValue) => {
-              return prevValue + "5";
-            });
-          }
-          break;
-        case "six":
-          if (operator === "") {
-            setFirstExpression((prevValue) => {
-              return prevValue + "6";
-            });
-          } else {
-            setSecondExpression((prevValue) => {
-              return prevValue + "6";
-            });
-          }
-          break;
-        case "seven":
-          if (operator === "") {
-            setFirstExpression((prevValue) => {
-              return prevValue + "7";
-            });
-          } else {
-            setSecondExpression((prevValue) => {
-              return prevValue + "7";
-            });
-          }
-          break;
-        case "eight":
-          if (operator === "") {
-            setFirstExpression((prevValue) => {
-              return prevValue + "8";
-            });
-          } else {
-            setSecondExpression((prevValue) => {
-              return prevValue + "8";
-            });
-          }
-          break;
-        case "nine":
-          if (operator === "") {
-            setFirstExpression((prevValue) => {
-              return prevValue + "9";
-            });
-          } else {
-            setSecondExpression((prevValue) => {
-              return prevValue + "9";
-            });
-          }
-          break;
-        default:
-          break;
+      //Check if first and second expression already has . in it
+    } else if (event.target.value === ".") {
+      if (operator === "") {
+        if (firstExpression.includes(".")) {
+          return;
+        } else {
+          setFirstExpression((prevValue) => {
+            return prevValue + ".";
+          });
+        }
+      } else {
+        if (secondExpression.includes(".")) {
+          return;
+        } else {
+          setSecondExpression((prevValue) => {
+            return prevValue + ".";
+          });
+        }
       }
-    };
-    setDisplay(firstExpression);
-  });
+      //Check if the event is a operator
+    } else if (
+      event.target.value.includes("+") ||
+      event.target.value.includes("/") ||
+      event.target.value.includes("*") ||
+      event.target.value.includes("-")
+    ) {
+      if (operator !== "" && secondExpression !== "") {
+        //resolve already
+        setFirstExpression(
+          String(eval(firstExpression + operator + secondExpression))
+        );
+        setSecondExpression("");
+        setOperator(event.target.value);
+      } else {
+        setOperator(event.target.value);
+      }
+    }
+    //Check if the event is Clear All
+    else if (event.target.value === "ac") {
+      setFirstExpression("0");
+      setSecondExpression("");
+      setOperator("");
+      setResult("");
+    }
+    //Check if the event is Equals
+    else if (event.target.value === "=") {
+      if (
+        firstExpression !== "" &&
+        operator !== "" &&
+        secondExpression !== ""
+      ) {
+        // setResult(eval(firstExpression + operator + secondExpression));
+        setFirstExpression(
+          String(eval(firstExpression + operator + secondExpression))
+        );
+      } else if (firstExpression !== "" && secondExpression === "") {
+        // setResult(eval(firstExpression));
+        setFirstExpression(String(eval(firstExpression)));
+      }
+      setSecondExpression("");
+      setOperator("");
+    }
+  };
 
   return (
     <div className={styles.calculator}>
-      <Display value={display} />
+      <Display value={firstExpression + operator + secondExpression} />
       <div className={styles.keyboard}>
-        <div
+        <button
           className={styles["item-a"]}
           id="clear"
-          onClick={expressionHandler}
+          value={"ac"}
+          onClick={buttonHandler}
         >
           A/C
-        </div>
-        <div
+        </button>
+        <button
           className={styles["item-b"]}
           id="divide"
-          onClick={expressionHandler}
+          value="/"
+          onClick={buttonHandler}
         >
           /
-        </div>
-        <div
+        </button>
+        <button
           className={styles["item-b"]}
           id="multiply"
-          onClick={expressionHandler}
+          value="*"
+          onClick={buttonHandler}
         >
           X
-        </div>
-        <div
+        </button>
+        <button
           className={styles["item-b"]}
           id="seven"
-          onClick={expressionHandler}
+          value="7"
+          onClick={buttonHandler}
         >
           7
-        </div>
-        <div
+        </button>
+        <button
           className={styles["item-b"]}
           id="eight"
-          onClick={expressionHandler}
+          value="8"
+          onClick={buttonHandler}
         >
           8
-        </div>
-        <div className={styles["item-b"]} id="nine" onClick={expressionHandler}>
+        </button>
+        <button
+          className={styles["item-b"]}
+          id="nine"
+          value="9"
+          onClick={buttonHandler}
+        >
           9
-        </div>
-        <div
+        </button>
+        <button
           className={styles["item-b"]}
           id="subtract"
-          onClick={expressionHandler}
+          value="-"
+          onClick={buttonHandler}
         >
           -
-        </div>
-        <div className={styles["item-b"]} id="four" onClick={expressionHandler}>
+        </button>
+        <button
+          className={styles["item-b"]}
+          id="four"
+          value="4"
+          onClick={buttonHandler}
+        >
           4
-        </div>
-        <div className={styles["item-b"]} id="five" onClick={expressionHandler}>
+        </button>
+        <button
+          className={styles["item-b"]}
+          id="five"
+          value="5"
+          onClick={buttonHandler}
+        >
           5
-        </div>
-        <div className={styles["item-b"]} id="six" onClick={expressionHandler}>
+        </button>
+        <button
+          className={styles["item-b"]}
+          id="six"
+          value="6"
+          onClick={buttonHandler}
+        >
           6
-        </div>
-        <div className={styles["item-b"]} id="add" onClick={expressionHandler}>
+        </button>
+        <button
+          className={styles["item-b"]}
+          id="add"
+          value="+"
+          onClick={buttonHandler}
+        >
           +
-        </div>
-        <div className={styles["item-b"]} id="one" onClick={expressionHandler}>
+        </button>
+        <button
+          className={styles["item-b"]}
+          id="one"
+          value="1"
+          onClick={buttonHandler}
+        >
           1
-        </div>
-        <div className={styles["item-b"]} id="two" onClick={expressionHandler}>
+        </button>
+        <button
+          className={styles["item-b"]}
+          id="two"
+          value="2"
+          onClick={buttonHandler}
+        >
           2
-        </div>
-        <div
+        </button>
+        <button
           className={styles["item-b"]}
           id="three"
-          onClick={expressionHandler}
+          value="3"
+          onClick={buttonHandler}
         >
           3
-        </div>
-        <div
+        </button>
+        <button
           className={styles["item-d"]}
           id="equals"
-          onClick={expressionHandler}
+          value="="
+          onClick={buttonHandler}
         >
           =
-        </div>
-        <div className={styles["item-c"]} id="zero" onClick={expressionHandler}>
+        </button>
+        <button
+          className={styles["item-c"]}
+          id="zero"
+          value="0"
+          onClick={buttonHandler}
+        >
           0
-        </div>
-        <div
+        </button>
+        <button
           className={styles["item-b"]}
           id="decimal"
-          onClick={expressionHandler}
+          value="."
+          onClick={buttonHandler}
         >
           .
-        </div>
+        </button>
       </div>
     </div>
   );
