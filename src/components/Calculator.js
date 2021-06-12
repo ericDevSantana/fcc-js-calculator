@@ -56,7 +56,7 @@ const Calculator = (props) => {
         secondExpression !== "" &&
         secondExpression !== "-"
       ) {
-        console.log(firstExpression + operator + "(" + secondExpression + ")");
+        // console.log(firstExpression + operator + "(" + secondExpression + ")");
         //resolve already
         setFirstExpression(
           String(
